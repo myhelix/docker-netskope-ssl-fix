@@ -486,4 +486,4 @@ docker run --rm your-image go run -exec "curl https://api.example.com"
 
 ---
 
-**Don't see your language?** [Open an issue](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/issues) or submit a PR!
+**Don't see your language?** [Open an issue](https://github.com/myhelix/docker-netskope-ssl-fix/issues) or submit a PR!

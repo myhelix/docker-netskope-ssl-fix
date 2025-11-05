@@ -54,7 +54,7 @@ This repository provides **three working solutions** to fix SSL certificate veri
 ### Test the Problem
 
 ```bash
-git clone https://github.com/YOUR_ORG/docker-netskope-ssl-fix.git
+git clone https://github.com/myhelix/docker-netskope-ssl-fix.git
 cd docker-netskope-ssl-fix/examples
 
 # Run the broken version
@@ -312,8 +312,8 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/discussions)
+- **Issues:** [GitHub Issues](https://github.com/myhelix/docker-netskope-ssl-fix/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/myhelix/docker-netskope-ssl-fix/discussions)
 - **Questions:** See [docs/FAQ.md](docs/FAQ.md)
 
 ---

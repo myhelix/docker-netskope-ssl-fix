@@ -329,7 +329,7 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 ### Q: I found a bug. Where do I report it?
 
-**A:** [Open an issue on GitHub](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/issues) with:
+**A:** [Open an issue on GitHub](https://github.com/myhelix/docker-netskope-ssl-fix/issues) with:
 - Description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
@@ -348,8 +348,8 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 **Still have questions?**
 
-- 💬 [GitHub Discussions](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/discussions)
-- 🐛 [Report an Issue](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/issues)
+- 💬 [GitHub Discussions](https://github.com/myhelix/docker-netskope-ssl-fix/discussions)
+- 🐛 [Report an Issue](https://github.com/myhelix/docker-netskope-ssl-fix/issues)
 - 📧 Check with your organization's IT team
 
 ---

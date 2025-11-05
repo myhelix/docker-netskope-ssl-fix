@@ -50,4 +50,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ## 💬 Questions?
 
-Open a [Discussion](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/discussions) or [Issue](https://github.com/YOUR_ORG/docker-netskope-ssl-fix/issues).
+Open a [Discussion](https://github.com/myhelix/docker-netskope-ssl-fix/discussions) or [Issue](https://github.com/myhelix/docker-netskope-ssl-fix/issues).
