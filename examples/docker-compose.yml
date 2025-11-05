@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Broken version - demonstrates the SSL error
+  test-broken:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: netskope-test-broken
+    profiles:
+      - broken
+
+  # Fixed version - with Netskope certificate baked in
+  test-fixed:
+    build:
+      context: .
+      dockerfile: Dockerfile.fixed
+    container_name: netskope-test-fixed
+    profiles:
+      - fixed
+
+  # Development version - mounts certificate at runtime
+  test-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: netskope-test-dev
+    volumes:
+      # Mount Netskope certificate from host (read-only)
+      - /Library/Application Support/Netskope/STAgent/data/nscacert_combined.pem:/etc/ssl/certs/netskope.pem:ro
+    environment:
+      # Tell Python to use the Netskope certificate
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/netskope.pem
+      - SSL_CERT_FILE=/etc/ssl/certs/netskope.pem
+    profiles:
+      - dev

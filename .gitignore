@@ -1,0 +1,38 @@
+# Netskope Certificate - DO NOT COMMIT
+*.pem
+*.crt
+*.key
+nscacert*
+netskope*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Docker
+.dockerignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+tmp/
+temp/
