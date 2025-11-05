@@ -4,6 +4,8 @@
 
 A complete guide and working examples for running Python (and other language) applications in Docker when behind Netskope SSL inspection, without requiring bypass rules from IT.
 
+**Note:** This repository includes Helix's Netskope certificate (`nscacert_combined.pem`) for internal use.
+
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -48,8 +50,21 @@ This repository provides **three working solutions** to fix SSL certificate veri
 ### Prerequisites
 
 - Docker Desktop installed
-- Netskope client running on your machine
-- Access to Netskope's certificate file (automatic on macOS/Windows)
+- Netskope client running on your machine (Helix-specific certificate included in this repository)
+
+### Quick Test (Recommended)
+
+Run our automated test script to verify everything works:
+
+```bash
+git clone https://github.com/myhelix/docker-netskope-ssl-fix.git
+cd docker-netskope-ssl-fix
+./test-setup.sh
+```
+
+This will test both broken and fixed scenarios automatically.
+
+### Manual Testing
 
 ### Test the Problem
 
@@ -67,9 +82,7 @@ docker run --rm netskope-test
 ### Test the Solution
 
 ```bash
-# Copy your Netskope certificate
-cp "/Library/Application Support/Netskope/STAgent/data/nscacert_combined.pem" .
-
+# Certificate is already included in the repository
 # Run the fixed version
 docker build -f Dockerfile.fixed -t netskope-test-fixed .
 docker run --rm netskope-test-fixed
@@ -223,11 +236,16 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/netskope.pem
 docker-netskope-ssl-fix/
 ├── README.md                      # This file
 ├── LICENSE                        # MIT License
+├── CLAUDE.md                      # AI assistant guidance
+├── nscacert_combined.pem          # Helix Netskope certificate (included)
+├── update-certificate.sh          # Helper: Update certificate from system
+├── test-setup.sh                  # Helper: Test Docker setup
 ├── examples/
 │   ├── Dockerfile                 # Broken version (demonstrates issue)
 │   ├── Dockerfile.fixed           # Fixed version (with certificate)
 │   ├── docker-compose.yml         # All test scenarios
-│   └── test_google_apis.py        # Test script
+│   ├── test_google_apis.py        # Test script
+│   └── nscacert_combined.pem      # Certificate copy for Docker build
 ├── docs/
 │   ├── IT_REQUEST_TEMPLATE.md     # Email template for IT
 │   ├── LANGUAGE_EXAMPLES.md       # Language-specific configs
@@ -237,6 +255,30 @@ docker-netskope-ssl-fix/
     └── workflows/
         └── test.yml               # CI/CD example
 ```
+
+---
+
+## 🔄 Updating the Certificate
+
+If Netskope rotates their certificate or you need to update it:
+
+```bash
+# Run the update script
+./update-certificate.sh
+
+# Test that everything still works
+./test-setup.sh
+
+# Commit and push for team
+git add nscacert_combined.pem examples/nscacert_combined.pem
+git commit -m "Update Netskope certificate"
+git push
+```
+
+The `update-certificate.sh` script automatically:
+- ✅ Copies the latest certificate from your system
+- ✅ Updates both repository locations
+- ✅ Shows certificate info and next steps
 
 ---
 

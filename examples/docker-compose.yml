@@ -26,8 +26,8 @@ services:
       dockerfile: Dockerfile
     container_name: netskope-test-dev
     volumes:
-      # Mount Netskope certificate from host (read-only)
-      - /Library/Application Support/Netskope/STAgent/data/nscacert_combined.pem:/etc/ssl/certs/netskope.pem:ro
+      # Mount Netskope certificate from repository (read-only)
+      - ../nscacert_combined.pem:/etc/ssl/certs/netskope.pem:ro
     environment:
       # Tell Python to use the Netskope certificate
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/netskope.pem

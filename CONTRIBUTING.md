@@ -42,7 +42,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 - [ ] Documentation is updated
 - [ ] Examples are tested
 - [ ] Commit messages are clear
-- [ ] No sensitive data (certificates, keys, credentials)
+- [ ] No sensitive data (API keys, credentials) - Note: Helix's Netskope certificate is intentionally included
 
 ## 📄 License
 

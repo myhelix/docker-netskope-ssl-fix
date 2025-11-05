@@ -1,9 +1,9 @@
-# Netskope Certificate - DO NOT COMMIT
-*.pem
-*.crt
+# Netskope Certificate
+# Note: For Helix internal use, nscacert_combined.pem IS intentionally committed
+# Exclude other certificate files to prevent accidental commits
 *.key
-nscacert*
-netskope*
+# nscacert_combined.pem is tracked (Helix-specific)
+!nscacert_combined.pem
 
 # Python
 __pycache__/
@@ -18,9 +18,10 @@ ENV/
 # Docker
 .dockerignore
 
-# IDEs
+# IDEs and AI Assistants
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
 *~

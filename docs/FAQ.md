@@ -35,12 +35,17 @@ Just replace the Netskope certificate with your organization's certificate.
 
 ### Q: Should I commit the certificate to Git?
 
-**A:** **NO!** The `.gitignore` file in this repo explicitly excludes certificate files. Always keep certificates out of version control.
+**A:** **Generally NO!** However, this repository is specific to Helix and includes our Netskope certificate for internal use.
 
-Best practices:
+**For this Helix repository:**
+- ✅ Certificate is included (`nscacert_combined.pem`)
+- ✅ Ready to use immediately
+- ✅ Repository is internal to Helix
+
+**General best practices (other projects):**
 - ✅ Mount certificate at runtime (development)
 - ✅ Copy certificate during build from secure location (production)
-- ❌ Never commit certificate files to Git
+- ❌ Never commit certificate files to public repositories
 - ❌ Never push images with certificates to public registries
 
 ### Q: What about certificate rotation?
@@ -208,6 +213,10 @@ openssl x509 -in "/Library/Application Support/Netskope/STAgent/data/nscacert_co
 ### Q: How do I get the Netskope certificate?
 
 **A:**
+
+**For Helix employees:** The certificate is already included in this repository as `nscacert_combined.pem`. No need to copy it manually!
+
+**To update the certificate (if needed):**
 
 **macOS:**
 ```bash
