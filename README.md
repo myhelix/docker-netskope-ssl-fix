@@ -26,22 +26,47 @@ self-signed certificate in certificate chain
 - Docker containers don't trust Netskope's certificate by default
 - Result: SSL verification fails ❌
 
-**Common Symptoms:**
+**Common Symptoms (Docker):**
 - ❌ `pip install` fails in Docker
 - ❌ API calls to external services fail (Google, AWS, etc.)
 - ❌ `npm install` / `yarn install` fails
 - ❌ Git clone over HTTPS fails
 - ❌ Any HTTPS connection fails with SSL errors
 
+**Common Symptoms (Host Machine):**
+- ❌ Claude Code cannot connect to MCP servers
+- ❌ `npm install` fails on your Mac/Linux
+- ❌ VS Code extensions fail to install
+- ❌ Git operations fail with SSL errors
+
+**Additional Issue: gRPC and HTTP/2 Failures**
+
+Even when SSL certificates are properly trusted, Netskope may strip HTTP/2 protocol negotiation (ALPN), causing:
+- ❌ gRPC connections fail (gRPC requires HTTP/2)
+- ❌ Google AI APIs fail (Gemini, Custom Search, etc.)
+- ❌ Modern APIs requiring HTTP/2 fail
+- ✅ Regular HTTPS/HTTP/1.1 connections work fine
+
+**Why?** Netskope's SSL inspection can remove the ALPN (Application Layer Protocol Negotiation) extension from TLS handshakes, preventing HTTP/2 negotiation. This breaks gRPC, which requires HTTP/2.
+
+**Solution:** Request IT to bypass specific domains from SSL inspection (see [ST-2806](https://myhelix.atlassian.net/browse/ST-2806) for example).
+
 ---
 
 ## ✅ Solution
 
-This repository provides **three working solutions** to fix SSL certificate verification in Docker when behind Netskope:
+This repository provides solutions for **both Docker containers and your host machine**:
+
+### Docker Containers
 
 1. **[Bake Certificate into Image](#solution-1-bake-certificate-into-image-production)** - Best for production
 2. **[Mount Certificate at Runtime](#solution-2-mount-certificate-at-runtime-development)** - Best for development
 3. **[Request IT Bypass](#solution-3-request-bypass-rules-from-it)** - Best for long-term
+
+### Host Machine (Claude Code, npm, pip, git, etc.)
+
+If tools running on your Mac/Linux machine are also experiencing SSL errors:
+- **[Host Machine Setup Guide](docs/HOST_MACHINE_SETUP.md)** - Configure Claude Code, npm, pip, git, and other tools
 
 ---
 
@@ -171,17 +196,43 @@ services:
 
 ### Solution 3: Request Bypass Rules from IT
 
-**Best for:** Long-term solution, organization-wide fix
+**Best for:** Long-term solution, organization-wide fix, **REQUIRED for gRPC/HTTP/2**
 
 Request that your IT team add bypass rules for Docker processes accessing external APIs.
 
 **Email template:** See [docs/IT_REQUEST_TEMPLATE.md](docs/IT_REQUEST_TEMPLATE.md)
 
 **Domains to bypass:**
-- `*.googleapis.com` (Google APIs)
+- `*.googleapis.com` (Google APIs, **required for gRPC**)
 - `registry.npmjs.org` (NPM packages)
 - `pypi.org`, `files.pythonhosted.org` (Python packages)
 - `github.com`, `raw.githubusercontent.com` (Git operations)
+
+**Note:** If you're experiencing gRPC failures or HTTP/2 issues, bypass rules are the **only solution**. Installing the certificate alone will not fix HTTP/2 ALPN stripping.
+
+#### Testing for HTTP/2 ALPN Issues
+
+Use the included test script to diagnose HTTP/2 problems:
+
+```bash
+python3 newtest.py
+```
+
+This will test both HTTPS connectivity AND HTTP/2 ALPN negotiation to Google APIs. If HTTPS works but HTTP/2 ALPN fails, you need bypass rules from IT.
+
+**Example output showing the issue:**
+```
+✅ PASS - Google Gemini API (HTTPS)
+❌ FAIL - Google Gemini API (HTTP/2 ALPN)
+  Selected ALPN protocol: None  # Should be "h2"
+```
+
+**After IT adds bypass rules:**
+```
+✅ PASS - Google Gemini API (HTTPS)
+✅ PASS - Google Gemini API (HTTP/2 ALPN)
+  Selected ALPN protocol: h2  # ✅ gRPC will work!
+```
 
 ---
 
@@ -238,8 +289,10 @@ docker-netskope-ssl-fix/
 ├── LICENSE                        # MIT License
 ├── CLAUDE.md                      # AI assistant guidance
 ├── nscacert_combined.pem          # Helix Netskope certificate (included)
+├── newtest.py                     # gRPC/HTTP/2 ALPN diagnostic tool
 ├── update-certificate.sh          # Helper: Update certificate from system
 ├── test-setup.sh                  # Helper: Test Docker setup
+├── setup-host-environment.sh      # Helper: Configure host machine
 ├── examples/
 │   ├── Dockerfile                 # Broken version (demonstrates issue)
 │   ├── Dockerfile.fixed           # Fixed version (with certificate)
@@ -247,6 +300,7 @@ docker-netskope-ssl-fix/
 │   ├── test_google_apis.py        # Test script
 │   └── nscacert_combined.pem      # Certificate copy for Docker build
 ├── docs/
+│   ├── HOST_MACHINE_SETUP.md      # Configure Mac/Linux host tools
 │   ├── IT_REQUEST_TEMPLATE.md     # Email template for IT
 │   ├── LANGUAGE_EXAMPLES.md       # Language-specific configs
 │   ├── TROUBLESHOOTING.md         # Common issues and fixes
